@@ -1,0 +1,19 @@
+/**
+ * Laboratorio 6 | Daniel Antonio Santanilla | complement1.hdl
+ * Chip que hace el complelemto a 1 de una palabra de 6 bits
+ */
+CHIP complement1 
+{
+    IN ah[3], al[3];
+    OUT bh[3], bl[3];
+
+    PARTS:
+
+    Not(in=ah[0], out=bh[0]);
+    Not(in=ah[1], out=bh[1]);
+    Not(in=ah[2], out=bh[2]);
+
+    Not(in=al[0], out=bl[0]);
+    Not(in=al[1], out=bl[1]);
+    Not(in=al[2], out=bl[2]);
+}

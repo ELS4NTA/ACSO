@@ -1,0 +1,29 @@
+/**
+ * Laboratorio 6 | Daniel Antonio Santanilla | sum3.hdl
+ * Chip que dados dos palabras de 3 bits realiza la suma
+ */
+
+CHIP sum3 
+{
+    IN A2, A1, A0, B2, B1, B0;
+    OUT C, S2, S1, S0;
+
+    PARTS:
+    // Half Adder para S0
+    And(a=A0, b=B0, out=carry1); // Carry para FullAdder S1
+    Xor(a=A0, b=B0, out=S0);
+
+    // Full Adder para S1
+    And(a=A1, b=B1, out=carrysub1); 
+    Xor(a=A1, b=B1, out=resultadosub1);
+    And(a=resultadosub1, b=carry1, out=carrysub2);
+    Xor(a=resultadosub1, b=carry1, out=S1);
+    Or(a=carrysub1, b=carrysub2, out=carry2); // Carry para FullAdder S2
+
+    // Full Adder para S2 y C
+    And(a=A2, b=B2, out=carrysub3);
+    Xor(a=A2, b=B2, out=resultadosub2);
+    And(a=resultadosub2, b=carry2, out=carrysub4);
+    Xor(a=resultadosub2, b=carry2, out=S2);
+    Or(a=carrysub3, b=carrysub4, out=C); // Carry de la suma de 3 bits
+}

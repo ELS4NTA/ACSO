@@ -1,0 +1,39 @@
+/**
+ * Laboratorio 6 | Daniel Antonio Santanilla | compare3.hdl
+ * Chip que dados dos palabras de 3 bits realiza la comparacion de cual es mayor/igual/menor
+ * Si A>B S1=1 y S0=0; si A=B S1=0 y S0=1; si A<B S1=0 S0=0
+ */
+
+CHIP compare3 
+{
+    IN A2, A1, A0, B2, B1, B0;
+    OUT S1, S0;
+
+    PARTS:
+    // S0
+    // (A0 XOR B0)' (A1 XOR B1)' (A2 XOR B2)'
+    Xor(a=A0, b=B0, out=x0);
+    Xor(a=A1, b=B1, out=x1);
+    Xor(a=A2, b=B2, out=x2);
+    Not(in=x0, out=x0N);
+    Not(in=x1, out=x1N);
+    Not(in=x2, out=x2N);
+    And(a=x0N, b=x1N, out=x3);
+    And(a=x3, b=x2N, out=S0);
+
+    //S1
+    // A2 B2'+ A1 B1' (A2+B2') + A0 B0' (A1+B1') (A2+B2') 
+    Not(in=B0, out=B0N);
+    Not(in=B1, out=B1N);
+    Not(in=B2, out=B2N);
+    Or(a=A1, b=B1N, out=yOR1);
+    Or(a=A2, b=B2N, out=yOR2);
+    And(a=A0, b=B0N, out=yAND0);
+    And(a=A1, b=B1N, out=yAND1);
+    And(a=A2, b=B2N, out=yAND2);
+    And(a=yAND0, b=yOR1, out=y1);
+    And(a=y1, b=yOR2, out=y2);
+    And(a=yAND1, b=yOR2, out=y3);
+    Or(a=y2, b=y3, out=y4);
+    Or(a=y4, b=yAND2, out=S1);
+} 
