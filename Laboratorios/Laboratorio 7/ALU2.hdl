@@ -1,0 +1,26 @@
+/**
+ * Laboratorio 7 | Daniel Antonio Santanilla | ALU2.hdl
+ * Implementando un ALU con operaciones basicas AND - OR - NOT - SUM
+ * Usando compuertas ya creadas
+ * f0 y f1 identificadores de la operacion
+ * Suma 00: C -> carry C0 y C1 resultado
+ * Not 01: Not(A)
+ * Or 10: A Or B
+ * And 11: A And B 
+ */
+
+CHIP ALU2
+{
+    IN f1, f0, A1, A0, B1, B0; 
+    OUT C, C1, C0;
+
+    PARTS:
+    AddALU2(A1=A1, A0=A0, B1=B1, B0=B0, C=ac, C1=ac1, C0=ac0);
+    NotALU2(A1=A1, A0=A0, C1=cc1, C0=cc0);
+    OrALU2(A1=A1, A0=A0, B1=B1, B0=B0, C1=bc1, C0=bc0);
+    AndALU2(A1=A1, A0=A0, B1=B1, B0=B0, C1=dc1, C0=dc0);
+
+    Mux4Way1(F1=f1, F0=f0, A=ac, B=false, C=false, D=false, S=C);
+    Mux4Way1(F1=f1, F0=f0, A=ac1, B=bc1, C=cc1, D=dc1, S=C1);
+    Mux4Way1(F1=f1, F0=f0, A=ac0, B=bc0, C=cc0, D=dc0, S=C0);
+}

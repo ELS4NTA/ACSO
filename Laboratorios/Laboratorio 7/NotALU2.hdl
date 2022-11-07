@@ -1,0 +1,13 @@
+/**
+ * Operacion Not para el ALU2.hdl
+ */
+
+CHIP NotALU2
+{
+    IN A1, A0;
+    OUT C1, C0;
+
+    PARTS:
+    Not(in=A1, out=C1);
+    Not(in=A0, out=C0);
+}

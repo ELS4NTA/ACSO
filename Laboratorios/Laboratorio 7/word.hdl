@@ -1,0 +1,28 @@
+/**
+ * Laboratorio 7 | Daniel Antonio Santanilla | word.hdl
+ * Implementando una palabra de 16 bits usando flip-flops D
+ */
+
+CHIP word
+{
+    IN a[16]; 
+    OUT b[16];
+
+    PARTS:
+    DFF(in=a[0], out=b[0]);
+	DFF(in=a[1], out=b[1]);
+	DFF(in=a[2], out=b[2]);
+	DFF(in=a[3], out=b[3]);
+	DFF(in=a[4], out=b[4]);
+	DFF(in=a[5], out=b[5]);
+	DFF(in=a[6], out=b[6]);
+	DFF(in=a[7], out=b[7]);
+	DFF(in=a[8], out=b[8]);
+	DFF(in=a[9], out=b[9]);
+	DFF(in=a[10], out=b[10]);
+	DFF(in=a[11], out=b[11]);
+	DFF(in=a[12], out=b[12]);
+	DFF(in=a[13], out=b[13]);
+	DFF(in=a[14], out=b[14]);
+	DFF(in=a[15], out=b[15]);
+}

@@ -1,0 +1,26 @@
+/**
+ * Multiplexor 4 a 1
+ */
+
+CHIP Mux4Way1
+{
+    IN F1, F0, A, B, C, D;
+    OUT S;
+
+    PARTS:
+    // F0' (C F1+A F1')+F0 (D F1+B F1') 
+    Not(in=F0, out=F0N);
+    Not(in=F1, out=F1N);
+
+    And(a=C, b=F1, out=x1);
+    And(a=A, b=F1N, out=x2);
+    Or(a=x1, b=x2, out=x3);
+    And(a=F0N, b=x3, out=x4);
+
+    And(a=D, b=F1, out=x5);
+    And(a=B, b=F1N, out=x6);
+    Or(a=x5, b=x6, out=x7);
+    And(a=F0, b=x7, out=x8);
+
+    Or(a=x4, b=x8, out=S);
+}

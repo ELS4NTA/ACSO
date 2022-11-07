@@ -1,0 +1,13 @@
+/**
+ * Operacion de suma para el ALU2.hdl
+ */
+
+CHIP AddALU2
+{
+    IN A1, A0, B1, B0;
+    OUT C, C1, C0;
+
+    PARTS:
+    HalfAdder(a=A0, b=B0, sum=C0, carry=car1);
+    FullAdder(a=A1, b=B1, c=car1, sum=C1, carry=C);
+}

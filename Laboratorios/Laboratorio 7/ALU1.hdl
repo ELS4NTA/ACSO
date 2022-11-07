@@ -1,0 +1,70 @@
+/**
+ * Laboratorio 7 | Daniel Antonio Santanilla | ALU1.hdl
+ * Implementando un ALU con operaciones basicas AND - OR - NOT - SUM
+ * f0 y f1 identificadores de la operacion
+ * Suma 00: C -> carry C0 y C1 resultado
+ * Not 01: Not(A)
+ * Or 10: A Or B
+ * And 11: A And B 
+ */
+
+CHIP ALU1 
+{
+    IN f1, f0, A1, A0, B1, B0;
+    OUT C, C1, C0;
+
+    PARTS:
+    Not(in=f1, out=f1N); // f1'
+    Not(in=f0, out=f0N); // f0'
+    Not(in=A1, out=A1N); // A1'
+    Not(in=A0, out=A0N); // A0'
+    Not(in=B1, out=B1N); // B1'
+    Not(in=B0, out=B0N); // B0'
+    And(a=A0, b=B0, out=abAND0); // A0 B0
+    And(a=A1, b=B1, out=abAND1); // A1 B1
+    And(a=A0, b=A1, out=a01AND); // A0 A1
+    And(a=B0, b=B1, out=b01AND); // B0 B1
+    And(a=A1N, b=f0N, out=af10ANDN); // A1' f0'
+    And(a=f0N, b=f1N, out=f01ANDN); // f0' f1'
+    And(a=f1, b=f0N, out=f10ANDN); // f1 f0'
+    And(a=B0, b=f0, out=bfAND0); // B0 f0
+    And(a=B0, b=f1N, out=bf01AND); // B0 f1'
+    And(a=B0N, b=f1N, out=bf01ANDN); // B0' f1'
+    Or(a=A1, b=B1, out=abOR1); // A1 + B1
+    Or(a=A0N, b=B0N, out=abORN0); // A0' + B0'
+    Xor(a=A1, b=B1, out=abXOR1); // A1 XOR B1
+
+    // C
+    // (A1 B1 + A0 B0 (A1 + B1) ) f0' f1' 
+    And(a=abAND0, b=abOR1, out=x1);
+    Or(a=abAND1, b=x1, out=x2);
+    And(a=x2, b=f01ANDN, out=C);
+
+    // C1
+    // A1 B1 f0 + A1' f0' (f1 + A0 B0 B1') + (A0 A1 B0 B1 + f0 (A1+B1) + (A0'+B0')(A1 XOR B1) ) f1'
+    And(a=abAND1, b=f0, out=y1);
+
+    And(a=abAND0, b=B1N, out=y2);
+    Or(a=f1, b=y2, out=y3);
+    And(a=af10ANDN, b=y3, out=y4);
+
+    And(a=a01AND, b=b01AND, out=y5);
+    And(a=f0, b=abOR1, out=y6);
+    And(a=abORN0, b=abXOR1, out=y7);
+    Or(a=y5, b=y6, out=y8);
+    Or(a=y8, b=y7, out=y9);
+    And(a=y9, b=f1N, out=y10);
+
+    Or(a=y1, b=y4, out=y11);
+    Or(a=y11, b=y10, out=C1);
+
+    // C0
+    // A0' (f1 f0'+ B0 f1') + A0 (B0 f0 + B0' f1')
+    Or(a=f10ANDN, b=bf01AND, out=z1);
+    And(a=A0N, b=z1, out=z2);
+    
+    Or(a=bfAND0, b=bf01ANDN, out=z3);
+    And(a=A0, b=z3, out=z4);
+
+    Or(a=z2, b=z4, out=C0);
+}
