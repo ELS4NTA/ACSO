@@ -1,0 +1,159 @@
+/ Titulo: Proyecto 2
+/ Autor: Daniel Antonio Santanilla
+/ Escriba un programa en lenguaje ensamblador de MARIE 
+/ que calcule cuantos numeros primos existen dentro
+/ de un rango de enteros (incluyendo los extremos).
+
+/ funcion principal (main)
+main, DEC 0 
+	INPUT
+	STORE casos
+while_casos, LOAD zero
+	STORE cantidad
+	LOAD casos
+	SUBT one
+	STORE casos
+	SKIPCOND 000
+	JUMP primos
+	JUMP end_casos
+
+primos, INPUT
+	STORE liminf
+	INPUT
+	STORE limsup
+	LOAD liminf
+	STORE primo
+	SUBT one
+	SKIPCOND 400
+	JUMP while_primos
+	LOAD primo
+	ADD one
+	STORE primo
+while_primos, LOAD primo
+	SUBT limsup
+	SUBT one
+	SKIPCOND 000
+	JUMP end_primos
+	JUMP begin_primo
+
+begin_primo, LOAD two
+	STORE divisor
+	LOAD one
+	STORE noprimo
+while_primo, LOAD divisor
+	STORE mul_a
+	STORE mul_b
+	JNS mul
+	SUBT primo
+	SUBT one
+	SKIPCOND 000
+	JUMP end_esprim
+	JUMP body_esprim
+body_esprim, LOAD primo
+	STORE mod_a
+	LOAD divisor
+	STORE mod_b
+	JNS mod
+	SKIPCOND 400
+	JUMP end_if
+	LOAD zero
+	STORE noprimo
+	JUMP end_esprim
+end_if, LOAD divisor
+	ADD one
+	STORE divisor
+	JUMP while_primo
+end_esprim, LOAD noprimo
+	SKIPCOND 800
+	JUMP continue_primos
+	JUMP mas_liminf
+	
+mas_liminf, LOAD primo
+	SUBT liminf
+	ADD one
+	SKIPCOND 800
+	JUMP continue_primos
+	LOAD cantidad
+	ADD one
+	STORE cantidad
+	
+continue_primos, LOAD primo
+	ADD one
+	STORE primo
+	JUMP while_primos
+
+
+end_primos, LOAD cantidad
+	OUTPUT
+	JUMP while_casos
+
+	
+end_casos, HALT
+
+/ datos funcino principal (main)
+liminf, DEC 0
+limsup, DEC 0
+casos, DEC 0
+one, DEC 1
+two, DEC 2
+zero, DEC 0
+primo, DEC 2
+divisor, DEC 2
+noprimo, DEC 1
+cantidad, DEC 0
+
+
+/ funcion residuo entre dos numeros (mod)
+/ input: a, b
+/ output: a mod b
+mod, DEC 0 
+	CLEAR
+	STORE mod_r
+mod_while, LOAD mod_a
+	STORE mod_r
+	SUBT mod_b
+	SKIPCOND 800	/ while a > 0
+	JUMP mod_end_while
+	STORE mod_a
+	STORE mod_r
+	JUMP mod_while
+mod_end_while, SKIPCOND 400	/ if a = 0
+	JUMP mod_else
+	LOAD mod_cero
+	STORE mod_r
+mod_else, LOAD mod_r
+	JUMPI mod
+	
+/ datos funcion residuo entre dos numeros (mod)
+mod_a, DEC 0
+mod_b, DEC 0
+mod_r, DEC 0
+mod_cero, DEC 0
+
+
+/ funcion de multiplicacion (mul)
+/ input: a, b
+/ output: ab
+mul,    DEC 0
+	CLEAR
+	STORE mul_s
+	STORE mul_i
+mul_w,  SUBT mul_b
+	SKIPCOND 000
+	JUMP mul_end_w
+	LOAD mul_s
+	ADD mul_a
+	STORE mul_s
+	LOAD mul_i
+	ADD mul_one
+	STORE mul_i
+	JUMP mul_w
+mul_end_w, LOAD mul_s
+	JUMPI mul
+
+/ datos para la funcion multiplicacion (mul)
+mul_a, DEC 0
+mul_b, DEC 0
+mul_s, DEC 0
+mul_i, DEC 40
+mul_one, DEC 1
