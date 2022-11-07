@@ -1,0 +1,65 @@
+main, DEC 0
+	INPUT
+	STORE a
+	STORE mcd_a
+	INPUT
+	STORE b
+	STORE mcd_b
+	JNS mcd
+	OUTPUT
+	HALT
+		
+/ datos main
+a, DEC 0
+b, DEC 0
+
+
+mcd, DEC 0
+recur_mcd, LOAD mcd_b
+	SKIPCOND 400
+	JUMP while_mcd
+	JUMP end_mcd
+while_mcd, STORE mod_b
+	LOAD mcd_a
+	STORE mod_a
+	LOAD mcd_b
+	STORE mcd_a
+	JNS mod
+	STORE mcd_b
+	JUMP recur_mcd
+end_mcd, LOAD mcd_a
+	JUMPI mcd
+
+
+/ datos mcd
+mcd_a, DEC 0
+mcd_b, DEC 0
+
+
+
+/ funcion residuo entre dos numeros (mod)
+/ input: a, b
+/ output: a mod b
+mod, DEC 0 
+	CLEAR
+	STORE mod_r
+mod_while, LOAD mod_a
+	STORE mod_r
+	SUBT mod_b
+	SKIPCOND 800	/ while a > 0
+	JUMP mod_end_while
+	STORE mod_a
+	STORE mod_r
+	JUMP mod_while
+mod_end_while, SKIPCOND 400	/ if a = 0
+	JUMP mod_else
+	LOAD mod_cero
+	STORE mod_r
+mod_else, LOAD mod_r
+	JUMPI mod
+	
+/ datos funcion residuo entre dos numeros (mod)
+mod_a, DEC 0
+mod_b, DEC 0
+mod_r, DEC 0
+mod_cero, DEC 0

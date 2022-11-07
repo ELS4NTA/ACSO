@@ -1,0 +1,176 @@
+/ Titulo: Laboratorio 8 | punto c
+/ Autor: Daniel Antonio Santanilla
+/ Escribir un programa que resuleva el laboratorio 5a
+
+/ funcion principal (main)
+main, DEC 0
+	INPUT
+	STORE pasajeros_bel
+	INPUT
+	STORE pasajeros_ingl
+	INPUT
+	STORE pasajeros_nor
+	INPUT
+	STORE pasajeros_irl
+	INPUT
+	STORE pasajeros_fran
+	
+	/ numero de pasajeros por avion
+	LOAD pasajeros_bel
+	STORE mcd_a
+	LOAD pasajeros_ingl
+	STORE mcd_b
+	JNS mcd
+	STORE mcd_a
+	LOAD pasajeros_nor
+	STORE mcd_b
+	JNS mcd
+	STORE mcd_a
+	LOAD pasajeros_irl
+	STORE mcd_b
+	JNS mcd
+	STORE mcd_a
+	LOAD pasajeros_fran
+	STORE mcd_b
+	JNS mcd
+	STORE num_pasxAvi
+	OUTPUT
+	
+	/ pasajeros por avion
+	LOAD pasajeros_bel
+	STORE div_a
+	LOAD num_pasxAvi
+	STORE div_b
+	JNS div
+	STORE aviones_bel
+	OUTPUT
+	LOAD pasajeros_ingl
+	STORE div_a
+	JNS div
+	STORE aviones_ingl
+	OUTPUT
+	LOAD pasajeros_nor
+	STORE div_a
+	JNS div
+	STORE aviones_nor
+	OUTPUT
+	LOAD pasajeros_irl
+	STORE div_a
+	JNS div
+	STORE aviones_irl
+	OUTPUT
+	LOAD pasajeros_fran
+	STORE div_a
+	JNS div
+	STORE aviones_fran
+	OUTPUT
+	
+	/ total de aviones
+	CLEAR
+	ADD aviones_bel
+	ADD aviones_ingl
+	ADD aviones_nor
+	ADD aviones_irl
+	ADD aviones_fran
+	OUTPUT
+	HALT
+
+/ datos de la funcion principal
+pasajeros_bel, DEC 0
+pasajeros_ingl, DEC 0
+pasajeros_nor, DEC 0
+pasajeros_irl, DEC 0
+pasajeros_fran, DEC 0
+aviones_bel, DEC 0
+aviones_ingl, DEC 0
+aviones_nor, DEC 0
+aviones_irl, DEC 0
+aviones_fran, DEC 0
+num_pasxAvi, DEC 0
+
+
+/ funcion maximo comun divisor (mcd)
+/ input: a, b
+/ output: mcd(a, b)
+mcd, DEC 0 
+	CLEAR
+mcd_while, LOAD mcd_b 
+	SKIPCOND 400	/ b != 0
+	JUMP mcd_cuerpo_w
+	JUMP mcd_end_while
+mcd_cuerpo_w, LOAD mcd_a 
+	STORE mod_a
+	LOAD mcd_b
+	STORE mod_b
+	JNS mod
+	STORE mcd_rem
+	LOAD mcd_b
+	STORE mcd_a
+	LOAD mcd_rem
+	STORE mcd_b
+	JUMP mcd_while
+mcd_end_while, LOAD mcd_a
+	JUMPI mcd
+	
+/ datos funcion maximo comun division (mcd)
+mcd_a, DEC 0
+mcd_b, DEC 0
+mcd_rem, DEC 0
+
+
+/ funcion residuo entre dos numeros (mod)
+/ input: a, b
+/ output: a mod b
+mod, DEC 0 
+	CLEAR
+	STORE mod_r
+mod_while, LOAD mod_a
+	STORE mod_r
+	SUBT mod_b
+	SKIPCOND 800	/ while a > 0
+	JUMP mod_end_while
+	STORE mod_a
+	STORE mod_r
+	JUMP mod_while
+mod_end_while, SKIPCOND 400	/ if a = 0
+	JUMP mod_else
+	LOAD mod_cero
+	STORE mod_r
+mod_else, LOAD mod_r
+	JUMPI mod
+	
+/ datos funcion residuo entre dos numeros (mod)
+mod_a, DEC 0
+mod_b, DEC 0
+mod_r, DEC 0
+mod_cero, DEC 0
+
+
+/ funcion cociente entre dos numeros (div)
+/ input: a, b
+/ output: a div b
+div, DEC 0 
+	CLEAR
+	STORE div_d
+div_while, LOAD div_a
+	SUBT div_b
+	SKIPCOND 800	/ a > 0
+	JUMP div_end_while
+	STORE div_a
+	LOAD div_d
+	ADD div_one
+	STORE div_d
+	JUMP div_while
+div_end_while, SKIPCOND 400 / a = 0
+	JUMP div_else
+	LOAD div_d
+	ADD div_one
+	STORE div_d
+div_else, LOAD div_d
+	JUMPI div
+
+/ datos funcion cociente entre dos numeros (div)
+div_a, DEC 0
+div_b, DEC 0
+div_d, DEC 0
+div_one, DEC 1

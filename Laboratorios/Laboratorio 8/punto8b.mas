@@ -1,0 +1,48 @@
+/ Titulo: Laboratorio 8 | punto b
+/ Autor: Daniel Antonio Santanilla
+/ Dados a, b, c
+/ Escribir el mayor valor
+
+/ funcion principal (main)
+main, DEC 0
+	INPUT
+	STORE a
+	INPUT
+	STORE b
+	INPUT
+	STORE c
+	
+	LOAD a
+	STORE max_a
+	LOAD b
+	STORE max_b
+	JNS max
+	STORE max_a
+	LOAD c
+	STORE max_b
+	JNS max
+	LOAD nmax
+	OUTPUT
+	HALT
+
+/ datos funcion main
+a, DEC 0
+b, DEC 0
+c, DEC 0
+
+/ funcion maximo de dos numeros (max)
+max, DEC 0
+	LOAD max_a	
+	SUBT max_b
+if, SKIPCOND 800	/ a > b
+	JUMP else
+	LOAD max_a
+	JUMP end_if
+else, LOAD max_b	/ a < b
+end_if,	STORE nmax
+	JUMPI max
+	
+/ datos de la funcion max
+max_a, DEC 0
+max_b, DEC 0
+nmax, DEC 0

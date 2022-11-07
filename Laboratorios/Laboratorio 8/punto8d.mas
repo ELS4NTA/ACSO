@@ -1,0 +1,240 @@
+/ Titulo: Laboratorio 8 | punto d
+/ Autor: Daniel Antonio Santanilla
+/ Escribir un programa que calcule la fraccion egipcia
+/ de un numero racional positivo
+
+/ funcion principal (main)
+main, DEC 0
+	INPUT
+	STORE casos
+while_casos, LOAD casos
+	SUBT one
+	STORE casos
+	SKIPCOND 000
+	JUMP begin_egipcio
+	JUMP end_casos
+begin_egipcio, LOAD one
+	STORE residuo
+	INPUT
+	STORE numerador
+	INPUT
+	STORE denominador
+while, LOAD residuo
+	SKIPCOND 400
+	JUMP b_egipcio
+	JUMP end_egipcio
+b_egipcio,  LOAD numerador
+	STORE mcd_a
+	LOAD denominador
+	STORE mcd_b
+	JNS mcd
+	STORE mcd_num
+
+	LOAD numerador
+	STORE div_a
+	LOAD mcd_num
+	STORE div_b
+	JNS div
+	STORE numerador
+
+	LOAD denominador
+	STORE div_a
+	LOAD mcd_num
+	STORE div_b
+	JNS div
+	STORE denominador
+
+	LOAD denominador
+	STORE mod_a
+	STORE div_a
+	LOAD numerador
+	STORE mod_b
+	STORE div_b
+	JNS div
+	STORE cociente
+	JNS mod
+	STORE residuo
+	SKIPCOND 400
+	JUMP continue
+	JUMP end_egipcio
+continue, LOAD cociente
+	ADD one
+	STORE egipcio 
+	OUTPUT
+	LOAD numerador
+	STORE new_nume_a
+	LOAD denominador
+	STORE new_nume_b
+	STORE new_denom_a
+	LOAD egipcio
+	STORE new_nume_d
+	STORE new_denom_b
+	JNS new_nume
+	STORE numerador
+	JNS new_denom
+	STORE denominador
+	JUMP while
+end_egipcio, LOAD cociente
+	OUTPUT
+	LOAD zero
+	OUTPUT
+	JUMP while_casos
+end_casos, HALT
+
+/ datos funcion principal (main)
+numerador, DEC 0
+denominador, DEC 0
+cociente, DEC 0
+residuo, DEC 1
+egipcio, DEC 0
+casos, DEC 0
+one, DEC 1
+zero, DEC 0
+mcd_num, DEC 0
+
+
+/ funcion que indica el nuevo numerador luego de aplicar la resta (new_nume)
+new_nume, DEC 0
+	CLEAR
+	STORE new_nume_resp
+	LOAD new_nume_a
+	STORE mul_a
+	LOAD new_nume_d
+	STORE mul_b
+	JNS mul
+	SUBT new_nume_b
+	STORE new_nume_resp
+	LOAD new_nume_resp
+	JUMPI new_nume
+	
+/ datos funcion nuevo numerador
+new_nume_a, DEC 0
+new_nume_b, DEC 0
+new_nume_d, DEC 0
+new_nume_resp, DEC 0
+	
+	
+/ funcion que indica el nuevo denominador luego de aplicar la resta (new_denom)
+new_denom, DEC 0
+	CLEAR
+	STORE new_denom_resp
+	LOAD new_denom_a
+	STORE mul_a
+	LOAD new_denom_b
+	STORE mul_b
+	JNS mul
+	STORE new_denom_resp
+	LOAD new_denom_resp
+	JUMPI new_denom
+	
+/ datos funcion nuevo denomidaor
+new_denom_a, DEC 0
+new_denom_b, DEC 0
+new_denom_resp, DEC 0
+	
+
+mcd, DEC 0
+recur_mcd, LOAD mcd_b
+	SKIPCOND 400
+	JUMP while_mcd
+	JUMP end_mcd
+while_mcd, STORE mod_b
+	LOAD mcd_a
+	STORE mod_a
+	LOAD mcd_b
+	STORE mcd_a
+	JNS mod
+	STORE mcd_b
+	JUMP recur_mcd
+end_mcd, LOAD mcd_a
+	JUMPI mcd
+
+/ datos mcd
+mcd_a, DEC 0
+mcd_b, DEC 0
+
+
+/ funcion residuo entre dos numeros (mod)
+/ input: a, b
+/ output: a mod b
+mod, DEC 0 
+	CLEAR
+	STORE mod_r
+mod_while, LOAD mod_a
+	STORE mod_r
+	SUBT mod_b
+	SKIPCOND 800	/ while a > 0
+	JUMP mod_end_while
+	STORE mod_a
+	STORE mod_r
+	JUMP mod_while
+mod_end_while, SKIPCOND 400	/ if a = 0
+	JUMP mod_else
+	LOAD mod_cero
+	STORE mod_r
+mod_else, LOAD mod_r
+	JUMPI mod
+	
+/ datos funcion residuo entre dos numeros (mod)
+mod_a, DEC 0
+mod_b, DEC 0
+mod_r, DEC 0
+mod_cero, DEC 0
+
+
+/ funcion cociente entre dos numeros (div)
+/ input: a, b
+/ output: a div b
+div, DEC 0 
+	CLEAR
+	STORE div_d
+div_while, LOAD div_a
+	SUBT div_b
+	SKIPCOND 800	/ a > 0
+	JUMP div_end_while
+	STORE div_a
+	LOAD div_d
+	ADD div_one
+	STORE div_d
+	JUMP div_while
+div_end_while, SKIPCOND 400 / a = 0
+	JUMP div_else
+	LOAD div_d
+	ADD div_one
+	STORE div_d
+div_else, LOAD div_d
+	JUMPI div
+
+/ datos funcion cociente entre dos numeros (div)
+div_a, DEC 0
+div_b, DEC 0
+div_d, DEC 0
+div_one, DEC 1
+
+
+/ funcion de multiplicacion (mul)
+/ input: a, b
+/ output: ab
+mul,    DEC 0
+	CLEAR
+	STORE mul_s
+	STORE mul_i
+mul_w,  SUBT mul_b
+	SKIPCOND 000
+	JUMP mul_end_w
+	LOAD mul_s
+	ADD mul_a
+	STORE mul_s
+	LOAD mul_i
+	ADD mul_one
+	STORE mul_i
+	JUMP mul_w
+mul_end_w, LOAD mul_s
+	JUMPI mul
+
+/ datos para la funcion multiplicacion (mul)
+mul_a, DEC 0
+mul_b, DEC 0
+mul_s, DEC 0
+mul_i, DEC 40
+mul_one, DEC 1
