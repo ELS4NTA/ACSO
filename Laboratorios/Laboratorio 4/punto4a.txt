@@ -1,0 +1,37 @@
+Laboratorio 4 | ACSO | Daniel Antonio Santanilla | Punto 4
+
+Caracteristicas de un archivo:
+Al usar el comando ls -l para listar sus caracteristicas observaremos 10 caracteres
+
+Ejemplos 
+"-rw-r--r--" 
+"drw-r--r--"
+"drw-r--r--"
+
+Dichos permisos pueden ser divididos en cuatro partes para indicar: 
+tipo, propietario, grupo y otros permisos.
+
+**El primer caracter**
+El primer carácter de la cadena indica el tipo de archivo, y toma valores como:
+
+d: directorio
+b: archivo de bloque
+c: archivo especial de caracteres
+p: canal
+s: socket
+–: archivo normal
+
+**3 caracteres para el propietario (posiciones 2 a 4 de la cadena)**
+Ejemplo: "- rwx ------"
+
+**3 caracteres para el grupo al que pertenece el propietario (posiciones 5 a 7 de la cadena)**
+Ejemplo: "---- rwx ---"
+
+**3 caracteres para los demas usuarios (posiciones 8 a 10 de la cadena)**
+Ejemplo: "------- rwx"
+
+Estos tres grupos tienen caracteres que pueden tomar valores como:
+r: significa permiso de lectura (read)
+w: significa permiso de escritura (write)
+x: significa permiso de ejecución (execution)
+–: significa permiso deshabilitado.
