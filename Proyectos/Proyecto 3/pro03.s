@@ -77,7 +77,11 @@ encuentranum:
     LDR R0, =retResp
     STR LR, [R0]
     LDR R0, =valA
+    LDR R0, [R0]
+    MOV R0, #0
     LDR R1, =valB
+    LDR R1, [R1]
+    MOV R1, #0
     LDR R2, =valC
     LDR R2, [R2]
     MOV R3, #0      @ i
