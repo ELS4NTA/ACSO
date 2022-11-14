@@ -66,11 +66,11 @@ loop:
     B loop
 
 endloop:
-
     LDR LR, =return
     LDR LR, [LR]
     MOV R0, #0
     BX LR
+
 .endfunc
 
 .func encuentraNum
@@ -78,7 +78,7 @@ endloop:
     STR LR, [R0]
     LDR R0, =valA
     LDR R1, =valB
-    LDR R2, =valc
+    LDR R2, =valC
     LDR R2, [R2]
     MOV R3, #0      @ i
     MOV R4, #0      @ j
@@ -120,9 +120,9 @@ endloopone:
     LDR R0, [R0]
     LDR R1, =valB
     LDR R1, [R1]
-    AND R2, R0, R1  @ a == 0 and b == 0 esta mal malmal
-    CMP R2, #1
-    BEQ respuestanum
+    ADD R2, R0, R1  @  if a + b = 0 ? No hay : Si hay
+    CMP R2, #0
+    BNE respuestanum
 
 respuestano:
     LDR R0, =resno   @ print "NO"
