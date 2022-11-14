@@ -52,7 +52,7 @@ loop:
     LDR R0, =casos
     LDR R0, [R0]
     CMP R0, #0
-    BEQ endLoop
+    BEQ endloop
     SUB R0, R0, #1
     LDR R1, =casos
     STR R0, [R1]
@@ -61,8 +61,8 @@ loop:
     LDR R1, =valC   
     BL scanf
 
-    BL encuentraNum
-    BL printRespuesta
+    BL encuentranum
+    BL printrespuesta
     B loop
 
 endloop:
@@ -73,7 +73,8 @@ endloop:
 
 .endfunc
 
-.func encuentraNum
+.func encuentranum
+encuentranum:
     LDR R0, =retResp
     STR LR, [R0]
     LDR R0, =valA
@@ -81,11 +82,11 @@ endloop:
     LDR R2, =valC
     LDR R2, [R2]
     MOV R3, #0      @ i
-    MOV R4, #0      @ j
 loopone:
     ADD R3, R3, #1  @ i + 1
     CMP R3, R2
     BEQ endloopone
+    MOV R4, #0      @ j
 
 looptwo:
     ADD R4, R4, #1  @ j + 1
@@ -94,8 +95,8 @@ looptwo:
     MUL R5, R2, R2  @ c^2
     MUL R6, R3, R3  @ i^2
     MUL R7, R4, R4  @ j^2
-    ADD R8, R5, R6  @ i^2 + j^2
-    CMP R8, R7      
+    ADD R8, R7, R6  @ i^2 + j^2
+    CMP R8, R5      
     BEQ condition   @ i^2 + j^2 == c^2
     B looptwo
 
@@ -112,7 +113,8 @@ endloopone:
     LDR LR, [LR]
 .endfunc
 
-.func printRespuesta
+.func printrespuesta
+printrespuesta:
     LDR R0, =retFin
     STR LR, [R0]
 
@@ -125,20 +127,18 @@ endloopone:
     BNE respuestanum
 
 respuestano:
-    LDR R0, =resno   @ print "NO"
-    LDR R0, [R0]
-    LDR R1, =output
+    LDR R0, =resno @ print "NO"
     BL printf
     B endrespuesta
 
 respuestanum:
-    LDR R0, =valA   @ print a
-    LDR R0, [R0]
-    LDR R1, =output
+    LDR R0, =output @ print a
+    LDR R1, =valA   
+    LDR R1, [R1]
     BL printf
-    LDR R0, =valB   @ print b
-    LDR R0, [R0]
-    LDR R1, =output
+    LDR R0, =output @ print b
+    LDR R1, =valB   
+    LDR R1, [R1]
     BL printf
 
 endrespuesta:
