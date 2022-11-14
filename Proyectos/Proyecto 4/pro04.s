@@ -30,8 +30,10 @@ valArea:    .float 0f0.0
 
 valPerim:   .float 0f0.0
 
+.balign 4
 two:        .float 0f2.0
 
+.balign 4
 precision:  .float 0f0.000001
 
 .balign 4
@@ -100,8 +102,8 @@ loop:
     LDR R3, =puntocy
     BL scanf
     BL calsegmentos
-    BL triangarea
     BL perimetro
+    BL triangarea
     BL printrespuesta
     BL clasificacion
     B loop
@@ -128,60 +130,31 @@ calsegmentos:
     VLDR.f32    S4, [R0]
     LDR R0, =puntocy
     VLDR.f32    S5, [R0]
-    VSUB.f32    S6, S2, S4  @ segmento a:  d(B,C)
-    VMUL.f32    S7, S6, S6
-    VSUB.f32    S6, S3, S5
-    VMUL.f32    S8, S6, S6
-    VADD.f32    S9, S7, S8
-    VSQRT.f32   S10, S9
+    VSUB.f32    S6, S4, S2  @ segmento a:  d(B,C)
+    VMUL.f32    S6, S6, S6
+    VSUB.f32    S7, S5, S3
+    VMUL.f32    S7, S7, S7
+    VADD.f32    S8, S6, S7
+    VSQRT.f32   S8, S8
     LDR R0, =segmenta
-    VSTR.f32    S10, [R0]
-    VSUB.f32    S6, S0, S4  @ segmento b:  d(A,C)
-    VMUL.f32    S7, S6, S6
-    VSUB.f32    S6, S1, S5
-    VMUL.f32    S8, S6, S6
-    VADD.f32    S9, S7, S8
-    VSQRT.f32   S10, S9
+    VSTR        S8, [R0]
+    VSUB.f32    S6, S4, S0  @ segmento b:  d(A,C)
+    VMUL.f32    S6, S6, S6
+    VSUB.f32    S7, S5, S1
+    VMUL.f32    S7, S7, S7
+    VADD.f32    S8, S6, S7
+    VSQRT.f32   S8, S8
     LDR R0, =segmentb
-    VSTR.f32    S10, [R0]
-    VSUB.f32    S6, S0, S2  @ segmento c:  d(A,B)
-    VMUL.f32    S7, S6, S6
-    VSUB.f32    S6, S1, S3
-    VMUL.f32    S8, S6, S6
-    VADD.f32    S9, S7, S8
-    VSQRT.f32   S10, S9
+    VSTR        S8, [R0]
+    VSUB.f32    S6, S2, S0  @ segmento c:  d(A,B)
+    VMUL.f32    S6, S6, S6
+    VSUB.f32    S7, S3, S1
+    VMUL.f32    S7, S7, S7
+    VADD.f32    S8, S6, S7
+    VSQRT.f32   S8, S8
     LDR R0, =segmentc
-    VSTR.f32    S10, [R0]
+    VSTR        S8, [R0]
     LDR R0, =retcalseg
-    LDR LR, [R0]
-    BX LR
-.endfunc
-
-.func triangarea
-triangarea:
-    LDR R0, =retarea
-    STR LR, [R0]
-    LDR R0, =segmenta
-    VLDR.f32    S0, [R0]
-    LDR R0, =segmentb
-    VLDR.f32    S1, [R0]
-    LDR R0, =segmentc
-    VLDR.f32    S2, [R0]
-    LDR R0, =two
-    VLDR.f32    S9, [R0]
-    VADD.f32    S3, S0, S1  @ s = (a+b+c)/2
-    VADD.f32    S3, S3, S2
-    VDIV.f32    S4, S3, S9
-    VSUB.f32    S5, S4, S0  @ s - a
-    VSUB.f32    S6, S4, S1  @ s - b
-    VSUB.f32    S7, S4, S2  @ s - c
-    VMUL.f32    S8, S4, S5
-    VMUL.f32    S8, S8, S6
-    VMUL.f32    S8, S8, S7
-    VSQRT.f32   S8, S8      @ area = sqrt(s*(s-a)*(s-b)*(s-c))
-    LDR R0, =valArea
-    VSTR.f32    S8, [R0]
-    LDR R0, =retarea
     LDR LR, [R0]
     BX LR
 .endfunc
@@ -199,8 +172,37 @@ perimetro:
     VADD.f32    S3, S0, S1
     VADD.f32    S3, S3, S2  @ perimetro = a + b + c
     LDR R0, =valPerim
-    VSTR.f32 S3, [R0]
+    VSTR        S3, [R0]
     LDR R0, =retperim
+    LDR LR, [R0]
+    BX LR
+.endfunc
+
+.func triangarea
+triangarea:
+    LDR R0, =retarea
+    STR LR, [R0]
+    LDR R0, =segmenta
+    VLDR.f32    S0, [R0]
+    LDR R0, =segmentb
+    VLDR.f32    S1, [R0]
+    LDR R0, =segmentc
+    VLDR.f32    S2, [R0]
+    LDR R0, =two
+    VLDR.f32    S9, [R0]
+    VADD.f32    S3, S0, S1  
+    VADD.f32    S3, S3, S2
+    VDIV.f32    S4, S3, S9  @ s = (a+b+c)/2
+    VSUB.f32    S5, S4, S0  @ s - a
+    VMUL.f32    S8, S4, S5
+    VSUB.f32    S6, S4, S1  @ s - b
+    VMUL.f32    S8, S8, S6
+    VSUB.f32    S7, S4, S2  @ s - c
+    VMUL.f32    S8, S8, S7
+    VSQRT.f32   S8, S8      @ area = sqrt(s*(s-a)*(s-b)*(s-c))
+    LDR R0, =valArea
+    VSTR        S8, [R0]
+    LDR R0, =retarea
     LDR LR, [R0]
     BX LR
 .endfunc
@@ -209,13 +211,13 @@ perimetro:
 printrespuesta:
     LDR R0, =retfin
     STR LR, [R0]
-    LDR R0, =output @ print(area)
+    LDR R0, =output @ print(perimetro)
     LDR R1, =valPerim
     VLDR.f32        S0, [R1]
     VCVT.f64.f32    D0, S0
     VMOV            R2, R3, D0
     BL  printf
-    LDR R0, =output @ print(perimetro)
+    LDR R0, =output @ print(area)
     LDR R1, =valArea
     VLDR.f32        S0, [R1]
     VCVT.f64.f32    D0, S0
