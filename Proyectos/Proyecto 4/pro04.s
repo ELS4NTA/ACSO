@@ -260,7 +260,14 @@ cond2:
     VCMP.f32    S3, S4
     VMRS        APSR_nzcv, FPSCR
     BLT esIsosceles         @ segmentoA == segmentoC
-    B   esEscaleno          @ segmentoA != segmentoC
+    B   cond3               @ segmentoA != segmentoC
+cond3:
+    VSUB.f32    S3, S1, S2  @ comparacion de B con C caso 3
+    VABS.f32    S3, S3
+    VCMP.f32    S3, S4
+    VMRS        APSR_nzcv, FPSCR
+    BLT esIsosceles         @ segmentoB == segmentoC
+    B   esEscaleno          @ segmentoB != segmentoC
 esEquilatero:
     LDR R0, =equilatero
     BL printf
