@@ -74,7 +74,6 @@ equilatero: .asciz "equilatero\n"
 main:
     LDR R0, =return
     STR LR, [R0]
-
     LDR R0, =input  @ input casos
     LDR R1, =casos
     BL scanf
@@ -86,7 +85,6 @@ loop:
     SUB R0, R0, #1  @ casos - 1
     LDR R1, =casos
     STR R0, [R1]
-
     LDR R0, =inputdata
     LDR R1, =puntoax
     LDR R2, =puntoay
@@ -95,15 +93,12 @@ loop:
     LDR R5, =puntocx
     LDR R6, =puntocy
     BL scanf
-
     BL calsegmentos
     BL triangarea
     BL perimetro
     BL printrespuesta
     BL clasificacion
     B loop
-
-
 endloop:
     LDR R0, =return
     LDR LR, [R0]
