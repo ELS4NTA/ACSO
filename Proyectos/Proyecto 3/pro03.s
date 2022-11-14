@@ -70,7 +70,6 @@ endloop:
     LDR LR, [LR]
     MOV R0, #0
     BX LR
-
 .endfunc
 
 .func encuentranum
@@ -111,6 +110,7 @@ endlooptwo:
 endloopone:
     LDR LR, =retResp
     LDR LR, [LR]
+    BX LR
 .endfunc
 
 .func printrespuesta
@@ -144,6 +144,7 @@ respuestanum:
 endrespuesta:
     LDR LR, =retFin
     LDR LR, [LR]
+    BX LR
 .endfunc
 
 .end
