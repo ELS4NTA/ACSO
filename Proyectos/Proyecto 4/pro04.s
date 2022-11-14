@@ -30,6 +30,10 @@ valArea:    .float 0f0.0
 
 valPerim:   .float 0f0.0
 
+two:        .float 0f2.0
+
+precision:  .float 0f0.000001
+
 .balign 4
 casos:      .word 0
 
@@ -49,7 +53,7 @@ retfin:     .word 0
 input:      .asciz "%d"
 
 .balign	4
-inputdata:  .asciz "%f %f %f %f %f %f"
+inputdata:  .asciz "%f %f %f"
 
 .balign	4
 output:     .asciz "%f "
@@ -89,9 +93,11 @@ loop:
     LDR R1, =puntoax
     LDR R2, =puntoay
     LDR R3, =puntobx
-    LDR R4, =puntoby
-    LDR R5, =puntocx
-    LDR R6, =puntocy
+    BL scanf
+    LDR R0, =inputdata
+    LDR R1, =puntoby
+    LDR R2, =puntocx
+    LDR R3, =puntocy
     BL scanf
     BL calsegmentos
     BL triangarea
@@ -161,22 +167,20 @@ triangarea:
     VLDR.f32    S1, [R0]
     LDR R0, =segmentc
     VLDR.f32    S2, [R0]
+    LDR R0, =two
+    VLDR.f32    S9, [R0]
     VADD.f32    S3, S0, S1  @ s = (a+b+c)/2
     VADD.f32    S3, S3, S2
-    VDIV.f32    S4, S3, 0f2.0
-
+    VDIV.f32    S4, S3, S9
     VSUB.f32    S5, S4, S0  @ s - a
     VSUB.f32    S6, S4, S1  @ s - b
     VSUB.f32    S7, S4, S2  @ s - c
-
     VMUL.f32    S8, S4, S5
     VMUL.f32    S8, S8, S6
     VMUL.f32    S8, S8, S7
-
     VSQRT.f32   S8, S8      @ area = sqrt(s*(s-a)*(s-b)*(s-c))
     LDR R0, =valArea
     VSTR.f32    S8, [R0]
-
     LDR R0, =retarea
     LDR LR, [R0]
     BX LR
@@ -206,13 +210,13 @@ printrespuesta:
     LDR R0, =retfin
     STR LR, [R0]
     LDR R0, =output @ print(area)
-    LDR R1, =valArea
+    LDR R1, =valPerim
     VLDR.f32        S0, [R1]
     VCVT.f64.f32    D0, S0
     VMOV            R2, R3, D0
     BL  printf
     LDR R0, =output @ print(perimetro)
-    LDR R1, =valPerim
+    LDR R1, =valArea
     VLDR.f32        S0, [R1]
     VCVT.f64.f32    D0, S0
     VMOV            R2, R3, D0
@@ -232,24 +236,26 @@ clasificacion:
     VLDR.f32    S1, [R0]
     LDR R0, =segmentc
     VLDR.f32    S2, [R0]
+    LDR R0, =precision
+    VLDR.f32    S4, [R0]
 cond0:
     VSUB.f32    S3, S0, S1  @ comparacion de A con B caso 0
     VABS.f32    S3, S3
-    VCMP.f32    S3, 0f0.000001
+    VCMP.f32    S3, S4
     VMRS        APSR_nzcv, FPSCR
     BLT cond1               @ segmentoA == segmentoB
     B   cond2               @ segmentoA != segmentoB
 cond1:
     VSUB.f32    S3, S0, S2  @ comparacion de A con C caso 1
     VABS.f32    S3, S3
-    VCMP.f32    S3, 0f0.000001
+    VCMP.f32    S3, S4
     VMRS        APSR_nzcv, FPSCR
     BLT esEquilatero        @ segmentoA == segmentoC
     B   esIsosceles         @ segmentoA != segmentoC
 cond2:
     VSUB.f32    S3, S0, S2  @ comparacion de A con C caso 2
     VABS.f32    S3, S3
-    VCMP.f32    S3, 0f0.000001
+    VCMP.f32    S3, S4
     VMRS        APSR_nzcv, FPSCR
     BLT esIsosceles         @ segmentoA == segmentoC
     B   esEscaleno          @ segmentoA != segmentoC
