@@ -57,6 +57,11 @@ loop:
     LDR R1, =casos
     STR R0, [R1]
     
+    MOV R0, #0
+    LDR R1, =valA
+    STR R0, [R1]
+    LDR R1, =valB
+    STR R0, [R1]
     LDR R0, =input  @ input c
     LDR R1, =valC   
     BL scanf
@@ -77,11 +82,7 @@ encuentranum:
     LDR R0, =retResp
     STR LR, [R0]
     LDR R0, =valA
-    LDR R0, [R0]
-    MOV R0, #0
     LDR R1, =valB
-    LDR R1, [R1]
-    MOV R1, #0
     LDR R2, =valC
     LDR R2, [R2]
     MOV R3, #0      @ i
