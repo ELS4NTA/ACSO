@@ -26,6 +26,8 @@ anguloB:    .float 0f0.0
 
 anguloC:    .float 0f0.0
 
+zero:       .float 0f0.0
+
 .balign 4
 precision:  .float 0f0.000001
 
@@ -36,7 +38,7 @@ return:     .word 0
 
 retcalang:  .word 0
 
-retfin:     .word 0
+retclasif:  .word 0
 
 .balign 4
 input:      .asciz "%d"
@@ -87,7 +89,7 @@ loop:
     BL calanguloA
     BL calanguloB
     BL calanguloC
-    BL printrespuesta
+    BL clasificacion
     B loop
 endloop:
     LDR R0, =return
@@ -134,7 +136,7 @@ calanguloA:
     VMUL.f32    S2, S3, S4  @ |AB| * |AC|
     @ cos(a) = (AB * AC)/(|AB| * |AC|)
     VDIV.f32    S1, S5, S2
-    LSR R0, =anguloA
+    LDR R0, =anguloA
     VSTR        S1, [R0]
     LDR R0, =retcalang
     LDR LR, [R0]
@@ -179,7 +181,7 @@ calanguloB:
     VMUL.f32    S2, S3, S4  @ |BA| * |BC|
     @ cos(a) = (BA * BC)/(|BA| * |BC|)
     VDIV.f32    S1, S5, S2
-    LSR R0, =anguloB
+    LDR R0, =anguloB
     VSTR        S1, [R0]
     LDR R0, =retcalang
     LDR LR, [R0]
@@ -224,21 +226,64 @@ calanguloC:
     VMUL.f32    S2, S3, S4  @ |CA| * |CB|
     @ cos(a) = (CA * CB)/(|CA| * |CB|)
     VDIV.f32    S1, S5, S2
-    LSR R0, =anguloC
+    LDR R0, =anguloC
     VSTR        S1, [R0]
     LDR R0, =retcalang
     LDR LR, [R0]
     BX LR
 .endfunc
 
-.func printrespuesta
-printrespuesta:
-    LDR R0, =retfin
+.func clasificacion
+clasificacion:
+    LDR R0, =retclasif
     STR LR, [R0]
-
-
-
-    LDR R0, =retfin
+    LDR R0, =anguloA
+    VLDR.f32    S0, [R0]
+    LDR R0, =anguloB
+    VLDR.f32    S1, [R0]
+    LDR R0, =anguloC
+    VLDR.f32    S2, [R0]
+    LDR R0, =zero
+    VLDR.f32    S3, [R0]
+condespecial:
+    VCMP.f32   S0, S3
+    VMRS       APSR_nzcv, FPSCR
+    BEQ esRectangulo
+    VCMP.f32   S1, S3
+    VMRS       APSR_nzcv, FPSCR
+    BEQ esRectangulo
+    VCMP.f32   S2, S3
+    VMRS       APSR_nzcv, FPSCR
+    BEQ esRectangulo
+cond0:
+    VCMP.f32   S0, S3
+    VMRS       APSR_nzcv, FPSCR
+    BLT esObtusangulo
+    B   cond1
+cond1:
+    VCMP.f32   S1, S3
+    VMRS       APSR_nzcv, FPSCR
+    BLT esObtusangulo
+    B   cond2
+cond2:
+    VCMP.f32   S2, S3
+    VMRS       APSR_nzcv, FPSCR
+    BLT esObtusangulo
+    B   esAcutangulo
+esRectangulo:
+    LDR R0, =rectangulo
+    BL printf
+    B endclasificacion
+esAcutangulo:
+    LDR R0, =acutangulo
+    BL printf
+    B endclasificacion
+esObtusangulo:
+    LDR R0, =obtusangulo
+    BL printf
+    B endclasificacion
+endclasificacion:
+    LDR R0, =retclasif
     LDR LR, [R0]
     BX LR
 .endfunc
