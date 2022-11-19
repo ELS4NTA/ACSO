@@ -130,9 +130,9 @@ calsegmentos:
     VLDR.f32    S4, [R0]
     LDR R0, =puntocy
     VLDR.f32    S5, [R0]
-    VSUB.f32    S6, S4, S2  @ segmento a:  d(B,C)
+    VSUB.f32    S6, S2, S0  @ segmento c:  d(A,B)
     VMUL.f32    S6, S6, S6
-    VSUB.f32    S7, S5, S3
+    VSUB.f32    S7, S3, S1
     VMUL.f32    S7, S7, S7
     VADD.f32    S8, S6, S7
     VSQRT.f32   S8, S8
@@ -146,9 +146,9 @@ calsegmentos:
     VSQRT.f32   S8, S8
     LDR R0, =segmentb
     VSTR        S8, [R0]
-    VSUB.f32    S6, S2, S0  @ segmento c:  d(A,B)
+    VSUB.f32    S6, S4, S2  @ segmento a:  d(B,C)
     VMUL.f32    S6, S6, S6
-    VSUB.f32    S7, S3, S1
+    VSUB.f32    S7, S5, S3
     VMUL.f32    S7, S7, S7
     VADD.f32    S8, S6, S7
     VSQRT.f32   S8, S8
@@ -188,10 +188,10 @@ triangarea:
     VLDR.f32    S1, [R0]
     LDR R0, =segmentc
     VLDR.f32    S2, [R0]
+    LDR R0, =valPerim
+    VLDR.f32    S3, [R0]
     LDR R0, =two
     VLDR.f32    S9, [R0]
-    VADD.f32    S3, S0, S1  
-    VADD.f32    S3, S3, S2
     VDIV.f32    S4, S3, S9  @ s = (a+b+c)/2
     VSUB.f32    S5, S4, S0  @ s - a
     VMUL.f32    S8, S4, S5
