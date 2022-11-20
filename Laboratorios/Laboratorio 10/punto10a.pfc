@@ -1,0 +1,50 @@
+(** Laboratorio 10 | Daniel Antonio Santanillla | punto 10a
+*   Escribir un programa concurrente en PascalFC que lea un vector 
+*   de numeros enteros y escriba el mınimo del vector.
+*)
+program lab10a;
+    { DECLARACIONES GLOBALES }
+    const
+        M = 2000;
+        N = 200;
+
+    type
+        TVector = array [1..M] of integer;
+        TMin = array [1..N] of integer;
+
+    var
+        vminimos: TMin;
+        vector: TVector;
+
+    process type TMinimo(inf, sup: integer; var min: integer);
+        var
+            i: integer;
+    begin
+        min := vector[inf];
+        for i := inf + 1 to sup do
+            if vector[i] < min then
+                min := vector[i];
+    end;
+
+    type
+        TProcesos = array [1..N] of TMinimo;
+        
+    var
+        procesos: TProcesos;
+        cant, proce, min, i: integer;
+begin
+    { MAIN }
+    readln(cant);
+    readln(proce);
+    for i := 1 to cant do
+        readln(vector[i]);
+    cobegin
+        for i := 1 to proce do
+            procesos[i]((i-1)*(cant div proce)+1,i*(cant div proce), vminimos[i]);
+    coend;
+    min := vminimos[1];
+    for i := 2 to proce do
+        if vminimos[i] < min then
+            min := vminimos[i];
+    writeln(min)
+end.

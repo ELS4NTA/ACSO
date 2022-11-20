@@ -1,0 +1,94 @@
+(** Laboratorio 10 | Daniel Antonio Santanillla | punto 10b
+*   Escribir un programa concurrente en PascalFC que lea un vector 
+*   de numeros enteros y escriba el mınimo del vector.
+*)
+program lab10b;
+    { DECLARACIONES GLOBALES }
+    const 
+        MAXM = 200;
+
+    type 
+        Tchannel = channel of integer;
+        Tchannels = array [1..MAXM] of Tchannel;
+
+    process type TPdatos(var cin: Tchannel; var cout: Tchannels; n, m: integer);
+        const MAXN = 200;
+        type Tvector = ARRAY [1..MAXN] of integer;
+        var 
+            vector: Tvector;
+            i, min: integer;
+    begin
+        { Leer el vector }
+        for i := 1 to n do
+            readln(vector[i]);
+            
+        { distribuir los datos }
+        for i := 1 to n do
+            cout[(i mod m) + 1] ! vector[i];
+
+        { recibir el minimo }
+        cin ? min;       
+
+        { escribir el minimo }
+        writeln(min);
+    end;
+
+    process type TPmin(var cin: Tchannel;var cout: Tchannel; n, m: integer);
+        var 
+            i, datum, min, max: integer;
+    begin
+        { calcula el numero de datos a recibir }
+        max := (n div m);
+
+        { recibe datos y calcula el minimo }
+        cin ? min;
+        for i := 2 to max do
+            begin
+                cin ? datum;
+                if datum < min then
+                    min := datum;
+            end;
+
+        { envia el minimo }
+        cout ! min;
+    end;
+
+    process type TPminglobal(var cin: Tchannels;var cout: Tchannel; m: integer);
+        var 
+            i, datum, min: integer;
+    begin
+        { recibir datos y calcular el minimo }
+        cin[1] ? min;
+        for i := 2 to m do
+            begin
+                cin[i] ? datum;
+                if datum < min then
+                    min := datum;
+            end;
+
+        { enviar el minimo }
+        cout ! min;
+    end;
+
+    type 
+        Tprocesses = array [1.. MAXM] of TPmin;
+
+    var 
+        datos: TPdatos;
+        mins: Tprocesses;
+        minglobal: TPminglobal;
+        left, right: Tchannels;
+        answer: Tchannel;
+        i, n, m: integer;
+
+begin
+    { MAIN }
+    readln(n);
+    readln(m);
+    cobegin
+        datos(answer, left, n, m);
+        for i := 1 to m do
+            mins[i](left[i], right[i], n, m);
+        minglobal(right, answer, m);
+    coend
+end.
