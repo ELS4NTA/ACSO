@@ -2,7 +2,7 @@
 *   Escribir un programa concurrente en PascalFC que lea un vector 
 *   de numeros enteros y escriba el mınimo del vector.
 *)
-program lab10a;
+program lab09a;
     { DECLARACIONES GLOBALES }
     const
         M = 2000;

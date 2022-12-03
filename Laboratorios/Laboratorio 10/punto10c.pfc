@@ -1,0 +1,73 @@
+(** Laboratorio 10 | Daniel Antonio Santanillla | punto 10c
+*   Escribir un programa concurrente en PascalFC que lea numeros 
+*   enteros y los escriba utilizando un buffer compartido para almacenarlos
+*)
+program lab09c;
+    { DECLARACIONES GLOBALES }
+    const
+        N = 400;
+    type
+        Tbuffer = array [1..N] of integer;
+    var
+        buffer: Tbuffer;
+        inb, outb: integer;
+
+        sbuffer, sindices: semaphore;
+        nonfull, nonempty: semaphore;
+
+    process type TPproducer(cant, NN: Integer);
+        var
+            dato, i: integer;
+    begin
+        dato := 1;
+        for i := 1 to cant do
+            begin
+                wait(nonfull);
+                readln(dato);
+                wait(sbuffer);
+                buffer[inb] := dato;
+                signal(sbuffer);
+                wait(sindices);
+                inb := ((inb + 1) mod NN) + 1;
+                signal(sindices);
+                signal(nonempty);
+            end;
+    end;
+
+    process type TPconsumer(cant, NN: Integer);
+        var
+            dato, i: integer;
+    begin
+        dato := 1;
+        for i := 1 to cant do
+            begin
+                wait(nonempty);
+                wait(sbuffer);
+                dato := buffer[outb];
+                signal(sbuffer);
+                wait(sindices);
+                outb := ((outb + 1) mod NN) + 1;
+                signal(sindices);
+                signal(nonfull);
+                writeln(dato);	
+            end;
+    end;
+
+    var
+        producer: TPproducer;
+        consumer: TPconsumer;
+        cant, NN: Integer;
+begin
+    readln(cant);
+    readln(NN);
+    inb := 1;
+    outb := 1;
+    initial(sbuffer, 1);
+    initial(sindices, 1);
+    initial(nonfull, 1);
+    initial(nonempty, 0); 
+    cobegin
+        producer(cant, NN);
+        consumer(cant, NN);
+    coend;
+end.
