@@ -3,7 +3,7 @@
 *   utilizando reales, lea las coordenadas de 3 puntos
 *   en el plano cartesiano que corresponden a los vertices 
 *   de un triangulo, y clasifique al triangulo de acuerdo a los
-*   angulos
+*   angulos.
 */
 .data
 
