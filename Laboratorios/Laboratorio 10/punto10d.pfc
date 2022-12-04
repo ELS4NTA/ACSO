@@ -1,0 +1,81 @@
+(** Laboratorio 10 | Daniel Antonio Santanillla | punto 10d
+*   Escribir un programa concurrente en PascalFC que lea numeros 
+*   enteros y los escriba utilizando un buffer compartido para almacenarlos.
+*)
+program lab09d;
+    { DECLARACIONES GLOBALES }
+    monitor
+        buffer;
+
+    export put, get;
+    
+    const 
+        N = 400;
+    type
+	    TBuffer = array [1..N] of integer;
+    var
+        buffer: TBuffer;
+        inb, outb: integer;
+        nolleno, novacio: condition;
+
+    procedure put (dato, NN: integer);
+    begin
+        if ((inb + 1) mod NN) + 1 = outb then
+            delay(nolleno);
+        buffer[inb] := dato;
+        inb := ((inb + 1) mod NN) + 1;
+        if not empty(novacio) then
+            resume(novacio);
+    end;
+
+    procedure get(var dato: integer; NN: Integer);
+    begin
+        if inb = outb then
+            delay(novacio);
+        dato := buffer[outb];
+        outb := ((outb + 1) mod NN) + 1;
+        if not empty(nolleno) then
+            resume(nolleno);
+    end;
+
+    begin
+        inb := 1;
+        outb := 1;
+    end;
+
+    process type TPproducer(num, NN: Integer);
+    var
+        dato, i: integer;
+    begin
+        dato := 1;
+        for i := 1 to num do
+        begin
+            readln(dato);
+            buffer.put(dato, NN);
+        end;
+    end;
+
+    process type TPconsumer(num, NN: Integer);
+    var
+        dato, i: integer;
+    begin
+        dato:= 1;
+        for i := 1 to num do
+        begin
+            buffer.get(dato, NN);
+            writeln(dato);
+        end;
+    end;
+
+    var
+        producer: TPproducer;
+        consumer: TPconsumer;
+        num, NN: Integer;
+begin
+    readln(num);
+    readln(NN);
+    cobegin
+        producer(num, NN);
+        consumer(num, NN);
+    coend;
+end.
