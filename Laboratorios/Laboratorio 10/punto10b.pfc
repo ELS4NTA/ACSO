@@ -2,18 +2,18 @@
 *   Escribir un programa concurrente en PascalFC que lea un vector 
 *   de numeros enteros y escriba el mınimo del vector.
 *)
-program lab10b;
+program lab09b;
     { DECLARACIONES GLOBALES }
     const 
         MAXM = 200;
 
     type 
         Tchannel = channel of integer;
-        Tchannels = array [1..MAXM] of Tchannel;
+        Tchannels = array [1..200] of Tchannel;
 
     process type TPdatos(var cin: Tchannel; var cout: Tchannels; n, m: integer);
         const MAXN = 200;
-        type Tvector = ARRAY [1..MAXN] of integer;
+        type Tvector = ARRAY [1..1980] of integer;
         var 
             vector: Tvector;
             i, min: integer;
@@ -71,7 +71,7 @@ program lab10b;
     end;
 
     type 
-        Tprocesses = array [1.. MAXM] of TPmin;
+        Tprocesses = array [1.. 1980] of TPmin;
 
     var 
         datos: TPdatos;
@@ -83,8 +83,8 @@ program lab10b;
 
 begin
     { MAIN }
-    readln(n);
-    readln(m);
+    readln(n); { catidad en el vector}
+    readln(m); { cantidad de procesos }
     cobegin
         datos(answer, left, n, m);
         for i := 1 to m do
